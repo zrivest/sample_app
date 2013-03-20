@@ -41,6 +41,13 @@ describe "User Pages" do
           visit users_path
         end
 
+        describe "can't delete self by submitting DELETE request to Users#destroy" do
+          before { delete user_path(admin) }
+          specify { response.should redirect_to(users_path), 
+                      flash[:error].should =~ /Can not delete own admin account!/i }
+        end
+
+
         it { should have_link('delete', href: user_path(User.first)) }
         it "should be able to delete another user" do
           expect { click_link('delete') }.to change(User, :count).by(-1)
@@ -106,7 +113,7 @@ describe "User Pages" do
         fill_in "Name",         with: "Example User"
         fill_in "Email",        with: "user@example.com"
         fill_in "Password",     with: "foobar"
-        fill_in "Confirmation", with: "foobar"
+        fill_in "Confirm Password", with: "foobar"
       end
 
       it "should create a user" do
