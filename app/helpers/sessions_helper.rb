@@ -21,6 +21,13 @@ module SessionsHelper
       user == current_user
     end
 
+    def signed_in_user
+      unless signed_in?
+        store_location
+        redirect_to signin_url, notice: "Please sign in."
+      end
+    end
+
 	def destroy
     	sign_out
     	redirect_to root_url
